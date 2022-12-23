@@ -1,6 +1,7 @@
 package com.example.questionnaire.vo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class QuestionsReq {
 	
@@ -15,6 +16,8 @@ public class QuestionsReq {
 	private LocalDate endTime;
 	
 	private String qus;
+	
+	private List<String> qusList;
 	
 	private String ans;
 	
