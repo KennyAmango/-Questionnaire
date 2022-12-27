@@ -90,6 +90,14 @@ public class QuestionsReq {
 	public void setQusOption(String qusOption) {
 		this.qusOption = qusOption;
 	}
+
+	public List<String> getQusList() {
+		return qusList;
+	}
+
+	public void setQusList(List<String> qusList) {
+		this.qusList = qusList;
+	}
 	
 
 }

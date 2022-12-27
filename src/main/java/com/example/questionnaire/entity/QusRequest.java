@@ -36,7 +36,7 @@ public class QusRequest {
 
 	@Column(name = "sex")
 	private String sex;
-	
+
 	@Column(name = "qus")
 	private String qus;
 
@@ -45,6 +45,18 @@ public class QusRequest {
 
 	public QusRequest() {
 
+	}
+
+	public QusRequest(UUID uuid, String title, String name, String phoneNum, String email, String age, 
+			String sex, String options_ans) {
+		this.uuid = uuid;
+		this.title = title;
+		this.name = name;
+		this.phoneNum = phoneNum;
+		this.email = email;
+		this.age = age;
+		this.sex = sex;
+		this.options_ans = options_ans;
 	}
 
 	public UUID getUuid() {
@@ -118,6 +130,5 @@ public class QusRequest {
 	public void setOptions_ans(String options_ans) {
 		this.options_ans = options_ans;
 	}
-
 
 }
