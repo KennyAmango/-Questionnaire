@@ -2,8 +2,10 @@ package com.example.questionnaire.service.impl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -24,6 +26,7 @@ import com.example.questionnaire.vo.QuestionsRes;
 import com.example.questionnaire.vo.QuestionsResList;
 import com.example.questionnaire.vo.QusDetailsReq;
 import com.example.questionnaire.vo.QusDetailsReqList;
+import com.example.questionnaire.vo.QusDetailsRes;
 
 @Service
 public class QuestionsServiceImpl implements QuestionsService {
@@ -224,5 +227,38 @@ public class QuestionsServiceImpl implements QuestionsService {
 		QuestionsResList finalRes = new QuestionsResList();
 		finalRes.setQuestionsResList(resList);
 		return finalRes;
+	}
+
+	@Override
+	public QusDetailsRes getQuestionsDetailsById(QuestionsReq req) {
+		
+		Optional<Questions> questionOp = questionsDao.findById(req.getId());
+		
+		if(!questionOp.isPresent()) {
+			return new QusDetailsRes(QuestionsRtnCode.QUTIONNAIRE_NO_FOUND.getMessage());
+		}
+		
+		Questions questionInfo = questionOp.get();
+		
+		List<QusDetails> qusList = qusDetailsDao.findAllByTitle(questionInfo.getTitle());
+		
+		Map<String, List<String>> qusMap = new HashMap<>();
+		
+		for(QusDetails item : qusList) {
+			List<String> optionsList = new ArrayList<>();
+			String[] str = item.getOptions().split(",");
+			
+			for(String strItem : str) {
+				optionsList.add(strItem.trim());
+			}
+			qusMap.put(item.getQus(), optionsList);
+		}
+		
+		QuestionsRes timeCheck = timeCheck(questionInfo.getStartTime(), questionInfo.getEndTime());
+		
+		QusDetailsRes res = new QusDetailsRes(questionInfo.getTitle(), questionInfo.getDetails(), questionInfo.getStartTime(), 
+				questionInfo.getEndTime(), timeCheck.getMessage(), qusMap );
+		
+		return res;
 	}
 }

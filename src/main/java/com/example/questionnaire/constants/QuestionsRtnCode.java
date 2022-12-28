@@ -17,6 +17,7 @@ public enum QuestionsRtnCode {
 	ANSOPTIONS_EMPTY("400", "問題選項為空"),
 	ANS_EMPTY("400", "題目答案為空"),
 	SEX_EMPTY("400", "性別為空"),
+	QUTIONNAIRE_NO_FOUND("400", "查無此問卷"),
 	TITLE_EMPTY("400", "問卷標題為空");
 	
 	private String code;

@@ -4,6 +4,7 @@ import com.example.questionnaire.vo.QuestionsReq;
 import com.example.questionnaire.vo.QuestionsRes;
 import com.example.questionnaire.vo.QuestionsResList;
 import com.example.questionnaire.vo.QusDetailsReqList;
+import com.example.questionnaire.vo.QusDetailsRes;
 
 public interface QuestionsService {
 	
@@ -18,6 +19,9 @@ public interface QuestionsService {
 	
 	//輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	public QuestionsResList getQuestionsByTitleOrDate(QuestionsReq req);
+	
+	//輸入問卷id顯示該問卷內容
+	public QusDetailsRes getQuestionsDetailsById(QuestionsReq req);
 	
 	
 	

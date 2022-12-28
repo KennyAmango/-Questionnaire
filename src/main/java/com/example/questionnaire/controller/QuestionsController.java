@@ -15,6 +15,7 @@ import com.example.questionnaire.vo.QuestionsReq;
 import com.example.questionnaire.vo.QuestionsRes;
 import com.example.questionnaire.vo.QuestionsResList;
 import com.example.questionnaire.vo.QusDetailsReqList;
+import com.example.questionnaire.vo.QusDetailsRes;
 import com.example.questionnaire.vo.QusRequestReq;
 import com.example.questionnaire.vo.QusRequestRes;
 
@@ -72,6 +73,14 @@ public class QuestionsController {
 
 	}
 
+	// 答卷者點選要做答的問卷,顯示該問卷內容與題目及選項
+	@PostMapping(value = "/api/getQuestionsDetailsById")
+	public QusDetailsRes getQuestionsDetailsById(@RequestBody QuestionsReq req) {
+
+		return questionsService.getQuestionsDetailsById(req);
+
+	}
+
 	// 取得答卷者資訊
 	@PostMapping(value = "/api/catchAnswerInfo")
 	public QusRequestRes catchAnswerInfo(@RequestBody QusRequestReq req, QusDetailsReqList dReqList) {
@@ -90,7 +99,7 @@ public class QuestionsController {
 			return new QusRequestRes(QuestionsRtnCode.AGE_EMPTY.getMessage());
 		} else if (!CollectionUtils.isEmpty(dReqList.getAnsList())) {
 			return new QusRequestRes(QuestionsRtnCode.ANS_EMPTY.getMessage());
-		} 
+		}
 
 		return qusRequestService.catchAnswerInfo(req, dReqList);
 
