@@ -118,15 +118,15 @@ public class QuestionsServiceImpl implements QuestionsService {
 	@Override
 	public QuestionsResList getAllQuestions() {
 
-		List<Questions> QuestionsList = questionsDao.findAll();
+		List<Questions> questionsList = questionsDao.findAll();
 
-		if (CollectionUtils.isEmpty(QuestionsList)) {
+		if (CollectionUtils.isEmpty(questionsList)) {
 			return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 		}
 
 		List<QuestionsRes> timeList = new ArrayList<>();
 
-		for (Questions item : QuestionsList) {
+		for (Questions item : questionsList) {
 			if (item.getStartTime().isAfter(LocalDate.now())) {
 				QuestionsRes res = new QuestionsRes();
 				res.setMessage("未開始");
@@ -155,7 +155,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	@Override
 	public QuestionsResList getQuestionsByTitleOrDate(QuestionsReq req) {
-		
+
 		List<Questions> questionsList = questionsDao.findAll();
 
 		List<QuestionsRes> resList = new ArrayList<>();
@@ -250,6 +250,52 @@ public class QuestionsServiceImpl implements QuestionsService {
 				}
 			}
 		}
+		// 輸入開始時間和標題
+		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() == null) {
+			int x = 0;
+			for (Questions item : questionsList) {
+				x++;
+				if ((item.getStartTime().isAfter(req.getStartTime()) || item.getStartTime().isEqual(req.getStartTime()))
+						&& item.getTitle().contains(req.getTitle())) {
+					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
+					res.setQuestions(item);
+					resList.add(res);
+				}
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
+				}
+			}
+		}
+		// 輸入結束時間和標題
+		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() != null) {
+			int x = 0;
+			for (Questions item : questionsList) {
+				x++;
+				if ((item.getEndTime().isBefore(req.getEndTime()) || item.getEndTime().isEqual(req.getEndTime()))
+						&& item.getTitle().contains(req.getTitle())) {
+					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
+					res.setQuestions(item);
+					resList.add(res);
+				}
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
+				}
+			}
+		}
+		// 甚麼都沒輸入
+		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() == null) {
+			int x = 0;
+			for (Questions item : questionsList) {
+				x++;
+					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
+					res.setQuestions(item);
+					resList.add(res);
+				
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
+				}
+			}
+		}
 		QuestionsResList finalRes = new QuestionsResList();
 		finalRes.setQuestionsResList(resList);
 		return finalRes;
@@ -276,10 +322,9 @@ public class QuestionsServiceImpl implements QuestionsService {
 			String[] str = item.getOptions().split(",");
 
 			for (String strItem : str) {
-				if(item.isMultipleChoice() == true) {
+				if (item.isMultipleChoice() == true) {
 					optionsMap.put(strItem, 1);
-				}
-				else if(item.isMultipleChoice() == false) {
+				} else if (item.isMultipleChoice() == false) {
 					optionsMap.put(strItem, 0);
 				}
 			}

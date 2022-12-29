@@ -8,6 +8,7 @@ public enum QuestionsRtnCode {
 	ENDTIME_EMPTY("400", "結束時間為空"),
 	TIME_ERROR("400", "開始時間不能大於結束時間"),
 	DTAILS_EMPTY("400", "問卷說明為空"),
+	TITLE_AND_TIME_EMPTY("400", "標題及時間為空"),
 	NO_QUESTIONNAIRE("400", "暫無問卷"),
 	NAME_EMPTY("400", "姓名為空"),
 	PHONENUM_EMPTY("400", "手機號碼為空"),
