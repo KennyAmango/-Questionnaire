@@ -97,7 +97,7 @@ public class QuestionsController {
 			return new QusRequestRes(QuestionsRtnCode.SEX_EMPTY.getMessage());
 		} else if (req.getAge() == null) {
 			return new QusRequestRes(QuestionsRtnCode.AGE_EMPTY.getMessage());
-		} else if (!CollectionUtils.isEmpty(dReqList.getAnsList())) {
+		} else if (!CollectionUtils.isEmpty(dReqList.getAnsMap())) {
 			return new QusRequestRes(QuestionsRtnCode.ANS_EMPTY.getMessage());
 		}
 

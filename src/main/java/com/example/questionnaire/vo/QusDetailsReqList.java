@@ -7,7 +7,9 @@ public class QusDetailsReqList {
 
 	private List<QusDetailsReq> reqList;
 
-	private List<Map<String, List<String>>> ansList;
+//	private List<Map<String, List<String>>> ansList;
+	
+	private Map<String, List<String>> ansMap;
 
 	public QusDetailsReqList() {
 
@@ -21,12 +23,22 @@ public class QusDetailsReqList {
 		this.reqList = reqList;
 	}
 
-	public List<Map<String, List<String>>> getAnsList() {
-		return ansList;
+	public Map<String, List<String>> getAnsMap() {
+		return ansMap;
 	}
 
-	public void setAnsList(List<Map<String, List<String>>> ansList) {
-		this.ansList = ansList;
+	public void setAnsMap(Map<String, List<String>> ansMap) {
+		this.ansMap = ansMap;
 	}
+
+	
+
+//	public List<Map<String, List<String>>> getAnsList() {
+//		return ansList;
+//	}
+//
+//	public void setAnsList(List<Map<String, List<String>>> ansList) {
+//		this.ansList = ansList;
+//	}
 
 }

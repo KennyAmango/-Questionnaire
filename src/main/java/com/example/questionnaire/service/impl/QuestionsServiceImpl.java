@@ -155,12 +155,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	@Override
 	public QuestionsResList getQuestionsByTitleOrDate(QuestionsReq req) {
-		// 判斷輸入時間其中一個為空則提醒,全部為空則讓前端取得所有問卷
-		if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() != null) {
-			return new QuestionsResList(QuestionsRtnCode.STARTTIME_EMPTY.getMessage());
-		} else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() == null) {
-			return new QuestionsResList(QuestionsRtnCode.ENDTIME_EMPTY.getMessage());
-		}
+		
 		List<Questions> questionsList = questionsDao.findAll();
 
 		List<QuestionsRes> resList = new ArrayList<>();
@@ -224,41 +219,76 @@ public class QuestionsServiceImpl implements QuestionsService {
 				}
 			}
 		}
+		// 只輸入開始時間時
+		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() == null) {
+			int x = 0;
+			for (Questions item : questionsList) {
+				x++;
+				if ((item.getStartTime().isAfter(req.getStartTime())
+						|| item.getStartTime().isEqual(req.getStartTime()))) {
+					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
+					res.setQuestions(item);
+					resList.add(res);
+				}
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
+				}
+			}
+		}
+		// 只輸入結束時間時
+		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() != null) {
+			int x = 0;
+			for (Questions item : questionsList) {
+				x++;
+				if ((item.getEndTime().isBefore(req.getEndTime()) || item.getEndTime().isEqual(req.getEndTime()))) {
+					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
+					res.setQuestions(item);
+					resList.add(res);
+				}
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
+				}
+			}
+		}
 		QuestionsResList finalRes = new QuestionsResList();
 		finalRes.setQuestionsResList(resList);
 		return finalRes;
 	}
 
+	// 輸入問卷id顯示該問卷內容
 	@Override
 	public QusDetailsRes getQuestionsDetailsById(QuestionsReq req) {
-		
+
 		Optional<Questions> questionOp = questionsDao.findById(req.getId());
-		
-		if(!questionOp.isPresent()) {
+
+		if (!questionOp.isPresent()) {
 			return new QusDetailsRes(QuestionsRtnCode.QUTIONNAIRE_NO_FOUND.getMessage());
 		}
-		
+
 		Questions questionInfo = questionOp.get();
-		
+
 		List<QusDetails> qusList = qusDetailsDao.findAllByTitle(questionInfo.getTitle());
-		
-		Map<String, List<String>> qusMap = new HashMap<>();
-		
-		for(QusDetails item : qusList) {
-			List<String> optionsList = new ArrayList<>();
+
+		Map<String, Map<String, Integer>> qusMap = new HashMap<>();
+
+		for (QusDetails item : qusList) {
+			Map<String, Integer> optionsMap = new HashMap<>();
 			String[] str = item.getOptions().split(",");
-			
-			for(String strItem : str) {
-				optionsList.add(strItem.trim());
+
+			for (String strItem : str) {
+				if(item.isMultipleChoice() == true) {
+					optionsMap.put(strItem, 1);
+				}
+				optionsMap.put(strItem, 0);
 			}
-			qusMap.put(item.getQus(), optionsList);
+			qusMap.put(item.getQus(), optionsMap);
 		}
-		
+
 		QuestionsRes timeCheck = timeCheck(questionInfo.getStartTime(), questionInfo.getEndTime());
-		
-		QusDetailsRes res = new QusDetailsRes(questionInfo.getTitle(), questionInfo.getDetails(), questionInfo.getStartTime(), 
-				questionInfo.getEndTime(), timeCheck.getMessage(), qusMap );
-		
+
+		QusDetailsRes res = new QusDetailsRes(questionInfo.getTitle(), questionInfo.getDetails(),
+				questionInfo.getStartTime(), questionInfo.getEndTime(), timeCheck.getMessage(), qusMap);
+
 		return res;
 	}
 }

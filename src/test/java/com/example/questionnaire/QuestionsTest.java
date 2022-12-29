@@ -1,5 +1,6 @@
 package com.example.questionnaire;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,30 +31,37 @@ public class QuestionsTest {
 	@Test
 	public void createByBackGround() {
 		QuestionsReq req = new QuestionsReq();
-		req.setTitle("test宗憲好棒");
-		req.setDetails("這是宗憲好棒測試問卷");
+		req.setTitle("test哈哈哈");
+		req.setDetails("這是test3測試問卷");
+		
+		LocalDate start = LocalDate.now();
+		
+		LocalDate end = LocalDate.now();
+		
+		req.setStartTime(start.plusDays(10));
+		req.setEndTime(end.plusDays(25));
 
 		Map<String, List<String>> map1 = new HashMap<>();
 		Map<String, List<String>> map2 = new HashMap<>();
 		Map<String, List<String>> map3 = new HashMap<>();
 
-		List<String> options = Arrays.asList("選項1", "選項2", "選項3");
+		List<String> options = Arrays.asList("選項a", "選項b", "選項c");
 
 		List<String> options2 = new ArrayList<>();
-		options2.add("選項11");
-		options2.add("選項22");
-		options2.add("選項33");
+		options2.add("選項aa");
+		options2.add("選項bb");
+		options2.add("選項cc");
 
 		List<String> options3 = new ArrayList<>();
-		options3.add("選項111");
-		options3.add("選項222");
-		options3.add("選項333");
+		options3.add("選項aaa");
+		options3.add("選項bbb");
+		options3.add("選項ccc");
 
 		List<Map<String, List<String>>> mapList = new ArrayList<>();
 
-		map1.put("問題1", options);
-		map2.put("問題2", options2);
-		map3.put("問題3", options3);
+		map1.put("問題a", options);
+		map2.put("問題b", options2);
+		map3.put("問題c", options3);
 
 		QusDetailsReqList dReqList = new QusDetailsReqList();
 
@@ -98,7 +106,36 @@ public class QuestionsTest {
 		ansList.add(ans2);
 		ansList.add(ans3);
 		QusDetailsReqList dReqList = new QusDetailsReqList();
-		dReqList.setAnsList(ansList);
+//		dReqList.setAnsList(ansList);
+		
+		QusRequestReq qusRequest = new QusRequestReq();
+		qusRequest.setTitle("test宗憲好棒");
+		qusRequest.setName("小笨蛋");
+		qusRequest.setPhoneNum("0911111111");
+		qusRequest.setEmail("kenny@gmail.com");
+		qusRequest.setAge("18");
+		qusRequest.setSex("男");
+		
+		qusRequestService.catchAnswerInfo(qusRequest, dReqList);
+	}
+	
+	@Test
+	public void catch2() {
+		
+		Map<String, List<String>> ansMap = new HashMap<>();
+		List<String> option1 = Arrays.asList("選項1");
+		ansMap.put("問題1", option1);
+		
+		
+		List<String> option2 = Arrays.asList("選項22");
+		ansMap.put("問題2", option2);
+		
+		
+		List<String> option3 = Arrays.asList("選項111", "選項222", "選項333");
+		ansMap.put("問題3", option3);
+		
+		QusDetailsReqList dReqList = new QusDetailsReqList();
+		dReqList.setAnsMap(ansMap);
 		
 		QusRequestReq qusRequest = new QusRequestReq();
 		qusRequest.setTitle("test宗憲好棒");

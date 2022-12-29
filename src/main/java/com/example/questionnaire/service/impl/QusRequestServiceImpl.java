@@ -30,30 +30,25 @@ public class QusRequestServiceImpl implements QusRequestService {
 	@Autowired
 	private QusDetailsDao qusDetailsDao;
 
+	
+	// 接收前端答卷者的資料與答案
 	@Override
-	public QusRequestRes catchAnswerInfo(QusRequestReq req, QusDetailsReqList dReqList) {
-		List<String> ansList = new ArrayList<>();
+	public QusRequestRes catchAnswerInfo(QusRequestReq req, QusDetailsReqList dReqMap) {
+		
 		Map<String, String> saveMap = new HashMap<>();
 		
-		// 輸入型態:List<Map{Key:問題選項(String), value:問題答案(List<String>)}>
-//	star:
-		for(Map<String, List<String>> ansMap: dReqList.getAnsList()) {
-//			int x = 1;
-//			int y = 0;
-//			for(Map.Entry<String, List<String>> entry: ansMap.entrySet()) {
-//				y++;
-//				if(x != y) {
-//					continue;
-//				}
-//				String entryStr = entry.toString().substring(1, entry.toString().length() - 1);
-//				saveMap.put(ansMap.get, entryStr);
-//				x++;
-//				continue star;
-//			}
-			String str = ansMap.toString().substring(1, ansMap.toString().length() - 1);
-			ansList.add(str);
+		// 輸入型態:Map{Key:問題選項(String), value:問題答案(List<String>)}
+		Map<String, List<String>> ansMap = dReqMap.getAnsMap();
+		
+		for (Map.Entry<String, List<String>> entry : ansMap.entrySet()) {
+			
+			List<String> valueList = entry.getValue();
+			String valueStr = valueList.toString().substring(1, valueList.toString().length() - 1);
+			
+			saveMap.put(entry.getKey(), valueStr);
 		}
-		String ansStr = ansList.toString().substring(1, ansList.toString().length() - 1);
+		
+		String ansStr = saveMap.toString().substring(1, saveMap.toString().length() - 1);
 		
 		
 		QusRequest qusRequest = new QusRequest(UUID.randomUUID(), req.getTitle(), req.getName(), req.getPhoneNum(), 

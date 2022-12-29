@@ -1,7 +1,6 @@
 package com.example.questionnaire.vo;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public class QusDetailsRes {
@@ -14,7 +13,7 @@ public class QusDetailsRes {
 
 	private LocalDate endTime;
 
-	private Map<String, List<String>> qusAndOptions;
+	private Map<String, Map<String, Integer>> qusAndOptions;
 
 	private String message;
 
@@ -27,7 +26,7 @@ public class QusDetailsRes {
 	}
 
 	public QusDetailsRes(String title, String details, LocalDate startTime, LocalDate endTime,
-			String message, Map<String, List<String>> qusAndOptions) {
+			String message, Map<String, Map<String, Integer>> qusAndOptions) {
 
 		this.title = title;
 		this.details = details;
@@ -69,11 +68,11 @@ public class QusDetailsRes {
 		this.endTime = endTime;
 	}
 
-	public Map<String, List<String>> getQusAndOptions() {
+	public Map<String, Map<String, Integer>> getQusAndOptions() {
 		return qusAndOptions;
 	}
 
-	public void setQusAndOptions(Map<String, List<String>> qusAndOptions) {
+	public void setQusAndOptions(Map<String, Map<String, Integer>> qusAndOptions) {
 		this.qusAndOptions = qusAndOptions;
 	}
 
