@@ -279,7 +279,9 @@ public class QuestionsServiceImpl implements QuestionsService {
 				if(item.isMultipleChoice() == true) {
 					optionsMap.put(strItem, 1);
 				}
-				optionsMap.put(strItem, 0);
+				else if(item.isMultipleChoice() == false) {
+					optionsMap.put(strItem, 0);
+				}
 			}
 			qusMap.put(item.getQus(), optionsMap);
 		}
