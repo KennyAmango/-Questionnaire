@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.questionnaire.constants.QuestionsRtnCode;
 import com.example.questionnaire.service.ifs.QuestionsService;
+import com.example.questionnaire.service.ifs.QusDetailsService;
 import com.example.questionnaire.service.ifs.QusRequestService;
 import com.example.questionnaire.vo.QuestionsReq;
 import com.example.questionnaire.vo.QuestionsRes;
 import com.example.questionnaire.vo.QuestionsResList;
+import com.example.questionnaire.vo.QusDetailsReq;
 import com.example.questionnaire.vo.QusDetailsReqList;
 import com.example.questionnaire.vo.QusDetailsRes;
 import com.example.questionnaire.vo.QusRequestReq;
@@ -24,10 +26,13 @@ import com.example.questionnaire.vo.QusRequestRes;
 public class QuestionsController {
 
 	@Autowired
-	QuestionsService questionsService;
+	private QuestionsService questionsService;
 
 	@Autowired
-	QusRequestService qusRequestService;
+	private QusRequestService qusRequestService;
+	
+	@Autowired
+	private QusDetailsService qusDetailsService;
 
 	// 在沒後台的情況新增問卷總覽
 	@PostMapping(value = "/api/createQuestionsWihoutBackGround")
@@ -104,5 +109,17 @@ public class QuestionsController {
 		return qusRequestService.catchAnswerInfo(req, dReqList);
 
 	}
+	
+	// 答卷者點選要做答的問卷,顯示該問卷內容與題目及選項
+		@PostMapping(value = "/api/statistics")
+		public QusDetailsRes statistics(@RequestBody QusDetailsReq req) {
+			
+			if(!StringUtils.hasText(req.getTitle())) {
+				return new QusDetailsRes(QuestionsRtnCode.TITLE_EMPTY.getMessage());
+			}
+
+			return qusDetailsService.statistics(req);
+
+		}
 
 }

@@ -35,20 +35,24 @@ public class QusRequestServiceImpl implements QusRequestService {
 	@Override
 	public QusRequestRes catchAnswerInfo(QusRequestReq req, QusDetailsReqList dReqMap) {
 		
-		Map<String, String> saveMap = new HashMap<>();
+		
+		
+		List<Map<String, String>> saveMapList = new ArrayList<>();
 		
 		// 輸入型態:Map{Key:問題選項(String), value:問題答案(List<String>)}
 		Map<String, List<String>> ansMap = dReqMap.getAnsMap();
 		
 		for (Map.Entry<String, List<String>> entry : ansMap.entrySet()) {
 			
+			Map<String, String> saveMap = new HashMap<>();
 			List<String> valueList = entry.getValue();
 			String valueStr = valueList.toString().substring(1, valueList.toString().length() - 1);
 			
 			saveMap.put(entry.getKey(), valueStr);
+			saveMapList.add(saveMap);
 		}
 		
-		String ansStr = saveMap.toString().substring(1, saveMap.toString().length() - 1);
+		String ansStr = saveMapList.toString().substring(1, saveMapList.toString().length() - 1);
 		
 		
 		QusRequest qusRequest = new QusRequest(UUID.randomUUID(), req.getTitle(), req.getName(), req.getPhoneNum(), 

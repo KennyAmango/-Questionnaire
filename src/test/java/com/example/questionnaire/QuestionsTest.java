@@ -85,53 +85,20 @@ public class QuestionsTest {
 		dReqList.setReqList(finalReq);
 		questionsService.createQuestionnaire(req, dReqList);
 	}
-
-	@Test
-	public void catch1() {
-		
-		Map<String, List<String>> ans1 = new HashMap<>();
-		List<String> option1 = Arrays.asList("選項1");
-		ans1.put("問題1", option1);
-		
-		Map<String, List<String>> ans2 = new HashMap<>();
-		List<String> option2 = Arrays.asList("選項22");
-		ans2.put("問題2", option2);
-		
-		Map<String, List<String>> ans3 = new HashMap<>();
-		List<String> option3 = Arrays.asList("選項111", "選項222", "選項333");
-		ans3.put("問題3", option3);
-		
-		List<Map<String, List<String>>> ansList = new ArrayList<>();
-		ansList.add(ans1);
-		ansList.add(ans2);
-		ansList.add(ans3);
-		QusDetailsReqList dReqList = new QusDetailsReqList();
-//		dReqList.setAnsList(ansList);
-		
-		QusRequestReq qusRequest = new QusRequestReq();
-		qusRequest.setTitle("test宗憲好棒");
-		qusRequest.setName("小笨蛋");
-		qusRequest.setPhoneNum("0911111111");
-		qusRequest.setEmail("kenny@gmail.com");
-		qusRequest.setAge("18");
-		qusRequest.setSex("男");
-		
-		qusRequestService.catchAnswerInfo(qusRequest, dReqList);
-	}
 	
 	@Test
 	public void catch2() {
 		
 		Map<String, List<String>> ansMap = new HashMap<>();
-		List<String> option1 = Arrays.asList("選項1");
+		List<String> option1 = Arrays.asList("選項1", "選項2");
 		ansMap.put("問題1", option1);
 		
 		
-		List<String> option2 = Arrays.asList("選項22");
+		List<String> option2 = Arrays.asList("選項44");
 		ansMap.put("問題2", option2);
 		
 		
-		List<String> option3 = Arrays.asList("選項111", "選項222", "選項333");
+		List<String> option3 = Arrays.asList("選項111", "選項222");
 		ansMap.put("問題3", option3);
 		
 		QusDetailsReqList dReqList = new QusDetailsReqList();
@@ -139,13 +106,50 @@ public class QuestionsTest {
 		
 		QusRequestReq qusRequest = new QusRequestReq();
 		qusRequest.setTitle("test宗憲好棒");
-		qusRequest.setName("小笨蛋");
+		qusRequest.setName("小笨蛋1");
 		qusRequest.setPhoneNum("0911111111");
 		qusRequest.setEmail("kenny@gmail.com");
-		qusRequest.setAge("18");
-		qusRequest.setSex("男");
+		qusRequest.setAge("20");
+		qusRequest.setSex("女");
 		
 		qusRequestService.catchAnswerInfo(qusRequest, dReqList);
 	}
 
+	
+	@Test
+	public void StringTest() {
+		 String str1 = "vbasic,aashfh,vbasic,aaaa,aaavbasic, vbasic";
+	        String str2 = "vbasic";
+	        String str3 = "aaa";
+	        String str4 = "aaa";
+	        String str5 = "vbasic";
+	        
+	        List<String> strList =new ArrayList<>();
+	        strList.add(str2);
+	        strList.add(str3);
+	        strList.add(str4);
+	        strList.add(str5);
+	        
+	        int x = 0;
+	        int y = 0;
+	        
+	        for(String item : strList) {
+	        	if(str1.contains(item)) {
+	        		 str1.replaceFirst(item," ");
+	        		if(item == "vbasic") {
+	        			x += 1;
+	        		}
+	        		if(item == "aaa") {
+	        			y += 1;
+	        		}
+	        		System.out.println(str1);
+	        	}
+	        	
+	        }
+	        System.out.println("vbasic出現:" + x +" 次");
+	        System.out.println("aaa出現:" + y +" 次");
+	        
+	        
+	        
+	}
 }

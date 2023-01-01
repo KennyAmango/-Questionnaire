@@ -3,6 +3,9 @@ package com.example.questionnaire.vo;
 import java.time.LocalDate;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QusDetailsRes {
 
 	private String title;
@@ -14,6 +17,8 @@ public class QusDetailsRes {
 	private LocalDate endTime;
 
 	private Map<String, Map<String, Integer>> qusAndOptions;
+	
+	private Map<String, Map<String, String>> statics;
 
 	private String message;
 
@@ -82,6 +87,14 @@ public class QusDetailsRes {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Map<String, Map<String, String>> getStatics() {
+		return statics;
+	}
+
+	public void setStatics(Map<String, Map<String, String>> statics) {
+		this.statics = statics;
 	}
 
 }
