@@ -6,6 +6,8 @@ import java.util.Map;
 public class QusDetailsReq {
 
 	private String title;
+	
+	private Integer id;
 
 	private Map<String, List<String>> options;
 
@@ -17,6 +19,14 @@ public class QusDetailsReq {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public void setTitle(String title) {

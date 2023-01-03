@@ -114,8 +114,8 @@ public class QuestionsController {
 		@PostMapping(value = "/api/statistics")
 		public QusDetailsRes statistics(@RequestBody QusDetailsReq req) {
 			
-			if(!StringUtils.hasText(req.getTitle())) {
-				return new QusDetailsRes(QuestionsRtnCode.TITLE_EMPTY.getMessage());
+			if(req.getId() == null) {
+				return new QusDetailsRes(QuestionsRtnCode.QUTIONNAIRE_NO_FOUND.getMessage());
 			}
 
 			return qusDetailsService.statistics(req);

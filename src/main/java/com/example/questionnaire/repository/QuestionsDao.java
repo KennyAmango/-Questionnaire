@@ -9,4 +9,5 @@ import com.example.questionnaire.entity.Questions;
 public interface QuestionsDao extends JpaRepository<Questions, Integer>{
 	
 
+	public Questions findTitleById(Integer id);
 }
