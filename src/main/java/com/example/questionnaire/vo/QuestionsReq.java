@@ -23,6 +23,10 @@ public class QuestionsReq {
 	
 	private String qusOption;
 	
+	private int num;
+	
+	private int displayAmount;
+	
 	public QuestionsReq(){
 		
 	}
@@ -97,6 +101,22 @@ public class QuestionsReq {
 
 	public void setQusList(List<String> qusList) {
 		this.qusList = qusList;
+	}
+
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
+
+	public int getDisplayAmount() {
+		return displayAmount;
+	}
+
+	public void setDisplayAmount(int displayAmount) {
+		this.displayAmount = displayAmount;
 	}
 	
 

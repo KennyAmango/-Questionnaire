@@ -69,6 +69,14 @@ public class QuestionsController {
 		return questionsService.getAllQuestions();
 
 	}
+	
+	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
+		@PostMapping(value = "/api/getQuestionsPageList")
+		public QuestionsResList getQuestionsPageList(@RequestBody QuestionsReq req) {
+
+			return questionsService.getQuestionsPageList(req);
+
+		}
 
 	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	@PostMapping(value = "/api/getQuestionsByTitleOrDate")

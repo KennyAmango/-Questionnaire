@@ -10,6 +10,11 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -152,11 +157,33 @@ public class QuestionsServiceImpl implements QuestionsService {
 		return resList;
 	}
 
+	//按照分頁取得對應比數的資料
+	@Override
+	public QuestionsResList getQuestionsPageList(QuestionsReq req) {
+		Order order = new Sort.Order(Sort.Direction.DESC, "endTime");
+		Pageable pageable = PageRequest.of(req.getNum() - 1 , req.getDisplayAmount(), Sort.by(order));
+		Page<Questions> questionsList = questionsDao.findAll(pageable);
+		
+		List<QuestionsRes> resList = new ArrayList<>();
+		
+		for (Questions item : questionsList) {
+			QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
+			res.setQuestions(item);
+			resList.add(res);
+		}
+		
+		QuestionsResList finalResList = new QuestionsResList();
+		finalResList.setQuestionsResList(resList);
+		return finalResList;
+	}
+
 	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	@Override
 	public QuestionsResList getQuestionsByTitleOrDate(QuestionsReq req) {
 
-		List<Questions> questionsList = questionsDao.findAll();
+		Order order = new Sort.Order(Sort.Direction.DESC, "endTime");
+		Pageable pageable = PageRequest.of(req.getNum() - 1 , req.getDisplayAmount(), Sort.by(order));
+		Page<Questions> questionsList = questionsDao.findAll(pageable);
 
 		List<QuestionsRes> resList = new ArrayList<>();
 
@@ -166,6 +193,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 			if (req.getStartTime().isAfter(req.getEndTime())) {
 				return new QuestionsResList(QuestionsRtnCode.TIME_ERROR.getMessage());
 			}
+			
 			int x = 0;
 			for (Questions item : questionsList) {
 				x++;
@@ -179,7 +207,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					resList.add(res);
 				}
 				// 當resList裡沒有問卷時,回傳查無問卷
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -194,7 +222,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -214,7 +242,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -230,7 +258,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -245,7 +273,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -261,7 +289,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -277,7 +305,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -287,11 +315,11 @@ public class QuestionsServiceImpl implements QuestionsService {
 			int x = 0;
 			for (Questions item : questionsList) {
 				x++;
-					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
-					res.setQuestions(item);
-					resList.add(res);
-				
-				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
+				QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
+				res.setQuestions(item);
+				resList.add(res);
+
+				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}

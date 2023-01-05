@@ -17,6 +17,9 @@ public interface QuestionsService {
 	//取得所有問卷
 	public QuestionsResList getAllQuestions();
 	
+	//按照分頁取得對應比數的資料
+	public QuestionsResList getQuestionsPageList(QuestionsReq req);
+	
 	//輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	public QuestionsResList getQuestionsByTitleOrDate(QuestionsReq req);
 	
