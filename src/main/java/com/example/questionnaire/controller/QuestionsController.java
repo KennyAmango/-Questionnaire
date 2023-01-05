@@ -70,11 +70,11 @@ public class QuestionsController {
 
 	}
 	
-	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
+	// 取得所有問卷(分頁)
 		@PostMapping(value = "/api/getQuestionsPageList")
-		public QuestionsResList getQuestionsPageList(@RequestBody QuestionsReq req) {
+		public QuestionsResList getQuestionsPageList() {
 
-			return questionsService.getQuestionsPageList(req);
+			return questionsService.getQuestionsPageList();
 
 		}
 

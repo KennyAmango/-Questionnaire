@@ -42,9 +42,6 @@ public class QuestionsServiceImpl implements QuestionsService {
 	@Autowired
 	private QusDetailsDao qusDetailsDao;
 
-	@Autowired
-	private QusRequestDao qusRequestDao;
-
 	// 判斷問卷時間
 	private QuestionsRes timeCheck(LocalDate start, LocalDate end) {
 		QuestionsRes res = new QuestionsRes();
@@ -159,14 +156,21 @@ public class QuestionsServiceImpl implements QuestionsService {
 
 	// 按照分頁取得對應比數的資料
 	@Override
-	public QuestionsResList getQuestionsPageList(QuestionsReq req) {
+	public QuestionsResList getQuestionsPageList() {
+		
 		Order order = new Sort.Order(Sort.Direction.DESC, "endTime");
-		Pageable pageable = PageRequest.of(req.getNum() - 1, req.getDisplayAmount(), Sort.by(order));
+		Pageable pageable = PageRequest.of(0, 2 , Sort.by(order));
 		Page<Questions> questionsList = questionsDao.findAll(pageable);
-
+		List<Questions> num = questionsDao.findAll();
+		int x = 0;
+		for(Questions item : num) {
+			x++;
+		}
 		List<QuestionsRes> resList = new ArrayList<>();
-
+		//資料庫的問卷數量
+        
 		for (Questions item : questionsList) {
+			
 			QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 			res.setQuestions(item);
 			resList.add(res);
@@ -174,21 +178,25 @@ public class QuestionsServiceImpl implements QuestionsService {
 
 		QuestionsResList finalResList = new QuestionsResList();
 		finalResList.setQuestionsResList(resList);
+		finalResList.setNum(x);
 		return finalResList;
 	}
 
 	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	@Override
 	public QuestionsResList getQuestionsByTitleOrDate(QuestionsReq req) {
-		if (req.getNum() == null || req.getDisplayAmount() == null) {
+		
+		if (req.getNum() == null ) {
 			return new QuestionsResList(QuestionsRtnCode.PAGE_ERROR.getMessage());
 		}
+		
 		Order order = new Sort.Order(Sort.Direction.DESC, "endTime");
-		Pageable pageable = PageRequest.of(req.getNum() - 1, req.getDisplayAmount(), Sort.by(order));
-		Page<Questions> questionsList = questionsDao.findAll(pageable);
+		Pageable pageable = PageRequest.of(req.getNum() - 1, 10, Sort.by(order));
+		List<Questions> questionsList = questionsDao.findAllByOrderByEndTimeDesc();
+//		Page<Questions> questionsList = questionsDao.findAll(pageable);
 
 		List<QuestionsRes> resList = new ArrayList<>();
-
+		int x = 0;
 		// 輸入問卷標題和時間搜尋時
 		if (StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() != null) {
 
@@ -196,7 +204,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 				return new QuestionsResList(QuestionsRtnCode.TIME_ERROR.getMessage());
 			}
 
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				// 把符合時間內的該標題問卷顯示出來
@@ -209,14 +217,14 @@ public class QuestionsServiceImpl implements QuestionsService {
 					resList.add(res);
 				}
 				// 當resList裡沒有問卷時,回傳查無問卷
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
 		}
 		// 只輸入問卷名稱搜尋時
 		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() == null) {
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				if (item.getTitle().contains(req.getTitle())) {
@@ -224,7 +232,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
@@ -234,7 +242,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 			if (req.getStartTime().isAfter(req.getEndTime())) {
 				return new QuestionsResList(QuestionsRtnCode.TIME_ERROR.getMessage());
 			}
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				if ((item.getStartTime().isAfter(req.getStartTime()) || item.getStartTime().isEqual(req.getStartTime()))
@@ -244,14 +252,14 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
 		}
 		// 只輸入開始時間時
 		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() == null) {
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				if ((item.getStartTime().isAfter(req.getStartTime())
@@ -260,14 +268,14 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
 		}
 		// 只輸入結束時間時
 		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() != null) {
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				if ((item.getEndTime().isBefore(req.getEndTime()) || item.getEndTime().isEqual(req.getEndTime()))) {
@@ -275,14 +283,14 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
 		}
 		// 輸入開始時間和標題
 		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() == null) {
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				if ((item.getStartTime().isAfter(req.getStartTime()) || item.getStartTime().isEqual(req.getStartTime()))
@@ -291,14 +299,14 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
 		}
 		// 輸入結束時間和標題
 		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() != null) {
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				if ((item.getEndTime().isBefore(req.getEndTime()) || item.getEndTime().isEqual(req.getEndTime()))
@@ -307,28 +315,46 @@ public class QuestionsServiceImpl implements QuestionsService {
 					res.setQuestions(item);
 					resList.add(res);
 				}
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
 		}
 		// 甚麼都沒輸入
 		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() == null) {
-			int x = 0;
+			
 			for (Questions item : questionsList) {
 				x++;
 				QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 				res.setQuestions(item);
 				resList.add(res);
 
-				if (questionsList.getSize() == x && CollectionUtils.isEmpty(resList)) {
+				if (questionsList.size() == x && CollectionUtils.isEmpty(resList)) {
 					return new QuestionsResList(QuestionsRtnCode.NO_QUESTIONNAIRE.getMessage());
 				}
 			}
 		}
 		QuestionsResList finalRes = new QuestionsResList();
 		finalRes.setQuestionsResList(resList);
-		return finalRes;
+//		finalRes = pageable;
+		int y  = 0;
+		int z = 1;
+		QuestionsResList pageList = new QuestionsResList();
+		List<QuestionsRes> pageRes = new ArrayList<>();
+		for(QuestionsRes item : finalRes.getQuestionsResList()) {
+			y++;
+			
+			if(z > pageable.getPageSize()) {
+				break;
+			}
+			if(y > pageable.getPageNumber()* pageable.getPageSize()) {
+				pageRes.add(item);
+				z++;
+		}
+	}
+		pageList.setQuestionsResList(pageRes);
+		pageList.setNum(x);
+		return pageList;
 	}
 
 	// 輸入問卷id顯示該問卷內容

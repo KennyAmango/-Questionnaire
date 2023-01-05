@@ -10,6 +10,8 @@ public class QuestionsResList {
 	private List<QuestionsRes> questionsResList;
 
 	private String message;
+	
+	private int num;
 
 	public QuestionsResList() {
 
@@ -34,6 +36,14 @@ public class QuestionsResList {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
 	}
 
 }

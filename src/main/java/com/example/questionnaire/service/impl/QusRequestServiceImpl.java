@@ -40,6 +40,7 @@ public class QusRequestServiceImpl implements QusRequestService {
 		List<Map<String, String>> saveMapList = new ArrayList<>();
 		
 		// 輸入型態:Map{Key:問題選項(String), value:問題答案(List<String>)}
+		//    題目        問題答案
 		Map<String, List<String>> ansMap = dReqMap.getAnsMap();
 		
 		for (Map.Entry<String, List<String>> entry : ansMap.entrySet()) {
