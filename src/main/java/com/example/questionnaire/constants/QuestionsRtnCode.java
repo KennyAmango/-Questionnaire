@@ -7,6 +7,7 @@ public enum QuestionsRtnCode {
 	STARTTIME_REQUIRED("400", "開始時間不能早於今日"),
 	ENDTIME_EMPTY("400", "結束時間為空"),
 	TIME_ERROR("400", "開始時間不能大於結束時間"),
+	PAGE_ERROR("400", "分頁數字錯誤"),
 	DTAILS_EMPTY("400", "問卷說明為空"),
 	TITLE_AND_TIME_EMPTY("400", "標題及時間為空"),
 	NO_QUESTIONNAIRE("400", "暫無問卷"),

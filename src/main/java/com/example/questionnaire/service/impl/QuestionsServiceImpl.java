@@ -157,21 +157,21 @@ public class QuestionsServiceImpl implements QuestionsService {
 		return resList;
 	}
 
-	//按照分頁取得對應比數的資料
+	// 按照分頁取得對應比數的資料
 	@Override
 	public QuestionsResList getQuestionsPageList(QuestionsReq req) {
 		Order order = new Sort.Order(Sort.Direction.DESC, "endTime");
-		Pageable pageable = PageRequest.of(req.getNum() - 1 , req.getDisplayAmount(), Sort.by(order));
+		Pageable pageable = PageRequest.of(req.getNum() - 1, req.getDisplayAmount(), Sort.by(order));
 		Page<Questions> questionsList = questionsDao.findAll(pageable);
-		
+
 		List<QuestionsRes> resList = new ArrayList<>();
-		
+
 		for (Questions item : questionsList) {
 			QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 			res.setQuestions(item);
 			resList.add(res);
 		}
-		
+
 		QuestionsResList finalResList = new QuestionsResList();
 		finalResList.setQuestionsResList(resList);
 		return finalResList;
@@ -180,9 +180,11 @@ public class QuestionsServiceImpl implements QuestionsService {
 	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	@Override
 	public QuestionsResList getQuestionsByTitleOrDate(QuestionsReq req) {
-
+		if (req.getNum() == null || req.getDisplayAmount() == null) {
+			return new QuestionsResList(QuestionsRtnCode.PAGE_ERROR.getMessage());
+		}
 		Order order = new Sort.Order(Sort.Direction.DESC, "endTime");
-		Pageable pageable = PageRequest.of(req.getNum() - 1 , req.getDisplayAmount(), Sort.by(order));
+		Pageable pageable = PageRequest.of(req.getNum() - 1, req.getDisplayAmount(), Sort.by(order));
 		Page<Questions> questionsList = questionsDao.findAll(pageable);
 
 		List<QuestionsRes> resList = new ArrayList<>();
@@ -193,7 +195,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 			if (req.getStartTime().isAfter(req.getEndTime())) {
 				return new QuestionsResList(QuestionsRtnCode.TIME_ERROR.getMessage());
 			}
-			
+
 			int x = 0;
 			for (Questions item : questionsList) {
 				x++;

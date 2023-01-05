@@ -23,9 +23,9 @@ public class QuestionsReq {
 	
 	private String qusOption;
 	
-	private int num;
+	private Integer num;
 	
-	private int displayAmount;
+	private Integer displayAmount;
 	
 	public QuestionsReq(){
 		
@@ -103,21 +103,20 @@ public class QuestionsReq {
 		this.qusList = qusList;
 	}
 
-	public int getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(int num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public int getDisplayAmount() {
+	public Integer getDisplayAmount() {
 		return displayAmount;
 	}
 
-	public void setDisplayAmount(int displayAmount) {
+	public void setDisplayAmount(Integer displayAmount) {
 		this.displayAmount = displayAmount;
 	}
-	
 
 }
