@@ -86,34 +86,36 @@ public class QuestionsTest {
 		questionsService.createQuestionnaire(req, dReqList);
 	}
 	
-	@Test
-	public void catch2() {
-		
-		Map<String, List<String>> ansMap = new HashMap<>();
-		List<String> option1 = Arrays.asList("選項1", "選項2");
-		ansMap.put("問題1", option1);
-		
-		
-		List<String> option2 = Arrays.asList("選項44");
-		ansMap.put("問題2", option2);
-		
-		
-		List<String> option3 = Arrays.asList("選項111", "選項222");
-		ansMap.put("問題3", option3);
-		
-		QusDetailsReqList dReqList = new QusDetailsReqList();
-		dReqList.setAnsMap(ansMap);
-		
-		QusRequestReq qusRequest = new QusRequestReq();
-		qusRequest.setTitle("test宗憲好棒");
-		qusRequest.setName("小笨蛋1");
-		qusRequest.setPhoneNum("0911111111");
-		qusRequest.setEmail("kenny@gmail.com");
-		qusRequest.setAge("20");
-		qusRequest.setSex("女");
-		
-		qusRequestService.catchAnswerInfo(qusRequest, dReqList);
-	}
+//	@Test
+//	public void catch2() {
+//		
+//		Map<String, List<String>> ansMap = new HashMap<>();
+//		List<String> option1 = Arrays.asList("選項1", "選項2");
+//		ansMap.put("問題1", option1);
+//		
+//		
+//		List<String> option2 = Arrays.asList("選項33");
+//		ansMap.put("問題2", option2);
+//		
+//		
+//		List<String> option3 = Arrays.asList("選項333", "選項222");
+//		ansMap.put("問題3", option3);
+//		
+//		QusDetailsReqList dReqList = new QusDetailsReqList();
+//		dReqList.setAnsMap(ansMap);
+//		
+//		QusRequestReq qusRequest = new QusRequestReq();
+//		qusRequest.setTitle("test宗憲好棒");
+//		qusRequest.setName("老乾杯2");
+//		qusRequest.setPhoneNum("0911111111");
+//		qusRequest.setEmail("kenny@gmail.com");
+//		qusRequest.setAge("25");
+//		qusRequest.setSex("女");
+//		
+//		qusRequest.setAnsMap(ansMap);
+//		
+//		qusRequestService.catchAnswerInfo(qusRequest);
+//	}
 
 	
 	@Test

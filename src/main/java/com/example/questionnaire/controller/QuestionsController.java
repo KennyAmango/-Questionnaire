@@ -30,7 +30,7 @@ public class QuestionsController {
 
 	@Autowired
 	private QusRequestService qusRequestService;
-	
+
 	@Autowired
 	private QusDetailsService qusDetailsService;
 
@@ -69,14 +69,14 @@ public class QuestionsController {
 		return questionsService.getAllQuestions();
 
 	}
-	
+
 	// 取得所有問卷(分頁)
-		@PostMapping(value = "/api/getQuestionsPageList")
-		public QuestionsResList getQuestionsPageList() {
+	@PostMapping(value = "/api/getQuestionsPageList")
+	public QuestionsResList getQuestionsPageList() {
 
-			return questionsService.getQuestionsPageList();
+		return questionsService.getQuestionsPageList();
 
-		}
+	}
 
 	// 輸入問卷名稱(模糊搜尋)或日期區間搜尋對應問卷
 	@PostMapping(value = "/api/getQuestionsByTitleOrDate")
@@ -96,7 +96,7 @@ public class QuestionsController {
 
 	// 取得答卷者資訊
 	@PostMapping(value = "/api/catchAnswerInfo")
-	public QusRequestRes catchAnswerInfo(@RequestBody QusRequestReq req, QusDetailsReqList dReqList) {
+	public QusRequestRes catchAnswerInfo(@RequestBody QusRequestReq req) {
 
 		if (!StringUtils.hasText(req.getTitle())) {
 			return new QusRequestRes(QuestionsRtnCode.TITLE_EMPTY.getMessage());
@@ -106,28 +106,30 @@ public class QuestionsController {
 			return new QusRequestRes(QuestionsRtnCode.PHONENUM_EMPTY.getMessage());
 		} else if (!StringUtils.hasText(req.getEmail())) {
 			return new QusRequestRes(QuestionsRtnCode.EMAIL_EMPTY.getMessage());
-		} else if (!StringUtils.hasText(req.getSex())) {
-			return new QusRequestRes(QuestionsRtnCode.SEX_EMPTY.getMessage());
-		} else if (req.getAge() == null) {
+		} 
+//		else if (!StringUtils.hasText(req.getSex())) {
+//			return new QusRequestRes(QuestionsRtnCode.SEX_EMPTY.getMessage());
+//		} 
+		else if (req.getAge() == null) {
 			return new QusRequestRes(QuestionsRtnCode.AGE_EMPTY.getMessage());
-		} else if (!CollectionUtils.isEmpty(dReqList.getAnsMap())) {
+		} else if (CollectionUtils.isEmpty(req.getAnsMap())) {
 			return new QusRequestRes(QuestionsRtnCode.ANS_EMPTY.getMessage());
 		}
 
-		return qusRequestService.catchAnswerInfo(req, dReqList);
+		return qusRequestService.catchAnswerInfo(req);
 
 	}
-	
-	// 答卷者點選要做答的問卷,顯示該問卷內容與題目及選項
-		@PostMapping(value = "/api/statistics")
-		public QusDetailsRes statistics(@RequestBody QusDetailsReq req) {
-			
-			if(req.getId() == null) {
-				return new QusDetailsRes(QuestionsRtnCode.QUTIONNAIRE_NO_FOUND.getMessage());
-			}
 
-			return qusDetailsService.statistics(req);
+	// 統計
+	@PostMapping(value = "/api/statistics")
+	public QusDetailsRes statistics(@RequestBody QusDetailsReq req) {
 
+		if (req.getId() == null) {
+			return new QusDetailsRes(QuestionsRtnCode.QUTIONNAIRE_NO_FOUND.getMessage());
 		}
+
+		return qusDetailsService.statistics(req);
+
+	}
 
 }

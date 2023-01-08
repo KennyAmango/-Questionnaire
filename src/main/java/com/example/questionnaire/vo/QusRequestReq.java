@@ -21,6 +21,8 @@ public class QusRequestReq {
 
 	private Map<String, String> options_ans;
 	
+	private Map<String, String> ansMap;
+	
 	public QusRequestReq() {
 		
 	}
@@ -88,6 +90,16 @@ public class QusRequestReq {
 	public void setOptions_ans(Map<String, String> options_ans) {
 		this.options_ans = options_ans;
 	}
+
+	public Map<String, String> getAnsMap() {
+		return ansMap;
+	}
+
+	public void setAnsMap(Map<String, String> ansMap) {
+		this.ansMap = ansMap;
+	}
+
+	
 
 
 }

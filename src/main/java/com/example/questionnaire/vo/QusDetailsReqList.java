@@ -10,6 +10,8 @@ public class QusDetailsReqList {
 //	private List<Map<String, List<String>>> ansList;
 	
 	private Map<String, List<String>> ansMap;
+	
+	private List<String> ansList;
 
 	public QusDetailsReqList() {
 
@@ -31,14 +33,13 @@ public class QusDetailsReqList {
 		this.ansMap = ansMap;
 	}
 
-	
+	public List<String> getAnsList() {
+		return ansList;
+	}
 
-//	public List<Map<String, List<String>>> getAnsList() {
-//		return ansList;
-//	}
-//
-//	public void setAnsList(List<Map<String, List<String>>> ansList) {
-//		this.ansList = ansList;
-//	}
+	public void setAnsList(List<String> ansList) {
+		this.ansList = ansList;
+	}
+
 
 }
