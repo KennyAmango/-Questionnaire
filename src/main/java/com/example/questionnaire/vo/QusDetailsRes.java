@@ -1,8 +1,10 @@
 package com.example.questionnaire.vo;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
+import com.example.questionnaire.entity.PercentageStatistics;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,8 +20,10 @@ public class QusDetailsRes {
 
 	private Map<String, Map<String, Integer>> qusAndOptions;
 	
-	private Map<String, Map<String, String>> statics;
-
+	private Map<String, Map<String, Integer>> percentageStatics;
+	
+	private List<PercentageStatistics> statisticsList;
+	
 	private String message;
 
 	public QusDetailsRes() {
@@ -89,12 +93,20 @@ public class QusDetailsRes {
 		this.message = message;
 	}
 
-	public Map<String, Map<String, String>> getStatics() {
-		return statics;
+	public Map<String, Map<String, Integer>> getPercentageStatics() {
+		return percentageStatics;
 	}
 
-	public void setStatics(Map<String, Map<String, String>> statics) {
-		this.statics = statics;
+	public void setPercentageStatics(Map<String, Map<String, Integer>> percentageStatics) {
+		this.percentageStatics = percentageStatics;
+	}
+
+	public List<PercentageStatistics> getStatisticsList() {
+		return statisticsList;
+	}
+
+	public void setStatisticsList(List<PercentageStatistics> statisticsList) {
+		this.statisticsList = statisticsList;
 	}
 
 }

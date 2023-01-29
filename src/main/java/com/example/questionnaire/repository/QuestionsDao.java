@@ -14,5 +14,7 @@ public interface QuestionsDao extends JpaRepository<Questions, Integer>{
 	
 	public List<Questions> findAllByOrderByEndTimeDesc();
 	
+	public List<Questions> findAllByOrderByIdDesc();
+	
 	
 }

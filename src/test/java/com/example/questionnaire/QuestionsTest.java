@@ -31,15 +31,18 @@ public class QuestionsTest {
 	@Test
 	public void createByBackGround() {
 		QuestionsReq req = new QuestionsReq();
-		req.setTitle("test哈哈哈");
-		req.setDetails("這是test3測試問卷");
+		req.setTitle("test新");
+		req.setDetails("這是test測試問卷");
 		
 		LocalDate start = LocalDate.now();
 		
 		LocalDate end = LocalDate.now();
 		
-		req.setStartTime(start.plusDays(10));
-		req.setEndTime(end.plusDays(25));
+		req.setStartTime(start.plusDays(-10));
+		
+//		req.setEndTime(end.plusDays(17));
+		
+		req.setEndTime(LocalDate.now());
 
 		Map<String, List<String>> map1 = new HashMap<>();
 		Map<String, List<String>> map2 = new HashMap<>();

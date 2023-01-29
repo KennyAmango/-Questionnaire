@@ -190,9 +190,9 @@ public class QuestionsServiceImpl implements QuestionsService {
 			return new QuestionsResList(QuestionsRtnCode.PAGE_ERROR.getMessage());
 		}
 		
-		Order order = new Sort.Order(Sort.Direction.DESC, "endTime");
+		Order order = new Sort.Order(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(req.getNum() - 1, 10, Sort.by(order));
-		List<Questions> questionsList = questionsDao.findAllByOrderByEndTimeDesc();
+		List<Questions> questionsList = questionsDao.findAllByOrderByIdDesc();
 //		Page<Questions> questionsList = questionsDao.findAll(pageable);
 
 		List<QuestionsRes> resList = new ArrayList<>();
@@ -206,12 +206,12 @@ public class QuestionsServiceImpl implements QuestionsService {
 
 			
 			for (Questions item : questionsList) {
-				x++;
 				// 把符合時間內的該標題問卷顯示出來
 				if ((item.getStartTime().isAfter(req.getStartTime()) || item.getStartTime().isEqual(req.getStartTime()))
 						&& (item.getEndTime().isBefore(req.getEndTime()) || item.getEndTime().isEqual(req.getEndTime()))
 						&& item.getTitle().contains(req.getTitle())) {
 
+					x++;
 					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 					res.setQuestions(item);
 					resList.add(res);
@@ -226,8 +226,9 @@ public class QuestionsServiceImpl implements QuestionsService {
 		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() == null) {
 			
 			for (Questions item : questionsList) {
-				x++;
+				
 				if (item.getTitle().contains(req.getTitle())) {
+					x++;
 					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 					res.setQuestions(item);
 					resList.add(res);
@@ -244,10 +245,11 @@ public class QuestionsServiceImpl implements QuestionsService {
 			}
 			
 			for (Questions item : questionsList) {
-				x++;
+				
 				if ((item.getStartTime().isAfter(req.getStartTime()) || item.getStartTime().isEqual(req.getStartTime()))
 						&& (item.getEndTime().isBefore(req.getEndTime())
 								|| item.getEndTime().isEqual(req.getEndTime()))) {
+					x++;
 					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 					res.setQuestions(item);
 					resList.add(res);
@@ -261,9 +263,10 @@ public class QuestionsServiceImpl implements QuestionsService {
 		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() == null) {
 			
 			for (Questions item : questionsList) {
-				x++;
+				
 				if ((item.getStartTime().isAfter(req.getStartTime())
 						|| item.getStartTime().isEqual(req.getStartTime()))) {
+					x++;
 					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 					res.setQuestions(item);
 					resList.add(res);
@@ -277,8 +280,9 @@ public class QuestionsServiceImpl implements QuestionsService {
 		else if (!StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() != null) {
 			
 			for (Questions item : questionsList) {
-				x++;
+				
 				if ((item.getEndTime().isBefore(req.getEndTime()) || item.getEndTime().isEqual(req.getEndTime()))) {
+					x++;
 					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 					res.setQuestions(item);
 					resList.add(res);
@@ -292,9 +296,10 @@ public class QuestionsServiceImpl implements QuestionsService {
 		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() != null && req.getEndTime() == null) {
 			
 			for (Questions item : questionsList) {
-				x++;
+				
 				if ((item.getStartTime().isAfter(req.getStartTime()) || item.getStartTime().isEqual(req.getStartTime()))
 						&& item.getTitle().contains(req.getTitle())) {
+					x++;
 					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 					res.setQuestions(item);
 					resList.add(res);
@@ -308,9 +313,10 @@ public class QuestionsServiceImpl implements QuestionsService {
 		else if (StringUtils.hasText(req.getTitle()) && req.getStartTime() == null && req.getEndTime() != null) {
 			
 			for (Questions item : questionsList) {
-				x++;
+				
 				if ((item.getEndTime().isBefore(req.getEndTime()) || item.getEndTime().isEqual(req.getEndTime()))
 						&& item.getTitle().contains(req.getTitle())) {
+					x++;
 					QuestionsRes res = timeCheck(item.getStartTime(), item.getEndTime());
 					res.setQuestions(item);
 					resList.add(res);

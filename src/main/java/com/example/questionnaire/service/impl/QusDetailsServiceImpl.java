@@ -1,8 +1,10 @@
 package com.example.questionnaire.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.example.questionnaire.constants.QuestionsRtnCode;
+import com.example.questionnaire.entity.PercentageStatistics;
 import com.example.questionnaire.entity.Questions;
 import com.example.questionnaire.entity.QusDetails;
 import com.example.questionnaire.entity.QusRequest;
@@ -22,7 +25,7 @@ import com.example.questionnaire.vo.QusDetailsRes;
 
 @Service
 public class QusDetailsServiceImpl implements QusDetailsService {
-	
+
 	@Autowired
 	private QuestionsDao questionsDao;
 
@@ -34,7 +37,7 @@ public class QusDetailsServiceImpl implements QusDetailsService {
 
 	@Override
 	public QusDetailsRes statistics(QusDetailsReq req) {
-		
+
 //		Questions question = questionsDao.findTitleById(req.getId());
 //		if(!StringUtils.hasText(question.getTitle())) {
 //			return new QusDetailsRes(QuestionsRtnCode.TITLE_EMPTY.getMessage());
@@ -93,9 +96,9 @@ public class QusDetailsServiceImpl implements QusDetailsService {
 //		QusDetailsRes res = new QusDetailsRes();
 //		res.setStatics(qusStatistics);
 //		return res;
-		
+
 		Questions question = questionsDao.findTitleById(req.getId());
-		if(!StringUtils.hasText(question.getTitle())) {
+		if (!StringUtils.hasText(question.getTitle())) {
 			return new QusDetailsRes(QuestionsRtnCode.TITLE_EMPTY.getMessage());
 		}
 		List<QusDetails> qusList = qusDetailsDao.findAllByTitle(question.getTitle());
@@ -110,8 +113,8 @@ public class QusDetailsServiceImpl implements QusDetailsService {
 
 		Map<String, Map<String, Integer>> qusStatistics = new HashMap<>();
 		int count = 0;
-		
-		for(QusRequest item : ansList) {
+
+		for (QusRequest item : ansList) {
 			count++;
 		}
 
@@ -125,7 +128,7 @@ public class QusDetailsServiceImpl implements QusDetailsService {
 			// foreach該問題的選項(str.trim())
 			for (String str : option) {
 				int x = 0;
-				
+
 				// foreach答卷者輸入的問題與選項
 				for (QusRequest ans : ansList) {
 
@@ -137,8 +140,8 @@ public class QusDetailsServiceImpl implements QusDetailsService {
 						// {問題3=選項222, 選項333, {問題1=選項2, 選項3, {問題2=選項11
 						if (item.trim().contains(str.trim()) && item.trim().contains(qus.getQus())) {
 							x++;
-							
-							optionsNum.put(str.trim(), x );
+
+							optionsNum.put(str.trim(), x);
 
 							qusStatistics.put(qus.getQus(), optionsNum);
 						}
@@ -146,8 +149,43 @@ public class QusDetailsServiceImpl implements QusDetailsService {
 				}
 			}
 		}
+//		Map<String, Map<String, Integer>> percentageMap = new HashMap<>();
+		Map<String, Integer> totalMap = new HashMap<>();
+		List<PercentageStatistics> percentageList = new ArrayList<>();
+		for (Entry<String, Map<String, Integer>> entry : qusStatistics.entrySet()) {
+			totalMap.put(entry.getKey(), 0);
+			
+			for (Entry<String, Integer> optionNum : entry.getValue().entrySet()) {
+				
+					totalMap.put(entry.getKey(), optionNum.getValue() + totalMap.get(entry.getKey()));
+				
+				
+			}
+		}
+		for (Entry<String, Map<String, Integer>> entry : qusStatistics.entrySet()) {
+
+			for (Entry<String, Integer> optionNum : entry.getValue().entrySet()) {
+
+				for (Entry<String, Integer> optionTotalNum : totalMap.entrySet()) {
+
+					if (entry.getKey().equals(optionTotalNum.getKey())) {
+						double x = optionNum.getValue();
+						double y = optionTotalNum.getValue();
+						double percentage = Math.round(x / y * 1000.0) / 10.0 ;
+						PercentageStatistics res = new PercentageStatistics(entry.getKey(),optionNum.getKey(),percentage);
+						percentageList.add(res);
+//						Map<String, Integer> optionPercentageMap = new HashMap<>();
+//						optionPercentageMap.put(optionNum.getKey(), percentage);
+//						percentageMap.put(entry.getKey(), optionPercentageMap);
+					}
+				}
+			}
+		}
+
 		QusDetailsRes res = new QusDetailsRes();
 		res.setQusAndOptions(qusStatistics);
+//		res.setPercentageStatics(percentageMap);
+		res.setStatisticsList(percentageList);
 		return res;
 	}
 
